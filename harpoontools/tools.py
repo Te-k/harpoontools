@@ -2,6 +2,7 @@ import argparse
 import json
 from harpoon.lib.utils import bracket, unbracket
 from harpoon.commands.ip import CommandIp
+from harpoon.commands.asn import CommandAsn
 import geoip2.database
 
 
@@ -41,7 +42,7 @@ def ipinfo():
         for ip in ips:
             r = command.ipinfo(ip)
             if args.format == "txt":
-                print('%s ASN%i %s %s %s' % (
+                print('%s ; ASN%i ; %s ; %s ; %s' % (
                         ip,
                         r['asn'],
                         r['asn_name'],
@@ -61,3 +62,31 @@ def ipinfo():
             else:
                 # JSON
                 print(json.dumps({ip: r}, sort_keys=True, indent=4))
+
+def clean_asn(asn):
+    """
+    Take something either as 18345, ASn17839 or AS2893
+    And returns just the number as a number
+    """
+    if asn.lower().startswith("asn"):
+        return int(asn[3:])
+    elif asn.lower().startswith("as"):
+        return int(asn[2:])
+    else:
+        return int(asn)
+
+
+def asninfo():
+    parser = argparse.ArgumentParser(description='Give information on an ASN')
+    parser.add_argument('ASN', type=str, nargs='*', default=[], help="ASN numbers")
+    args = parser.parse_args()
+    if len(args.ASN):
+        asns = args.ASN
+    else:
+        with open("/dev/stdin") as f:
+            asns = f.read().split()
+
+    command = CommandAsn()
+    for asn in asns:
+        n = clean_asn(asn)
+        print("ASN%i ; %s" % (n, command.asnname(n)))

@@ -5,6 +5,7 @@ CLI tools using [Harpoon](https://github.com/Te-k/harpoon) features
 ## Tools
 
 * **ipinfo** : provides information on an IP address (ASN and location)
+* **asninfo** : provides information on an ASN number
 
 ## Install
 

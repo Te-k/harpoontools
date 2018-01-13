@@ -22,7 +22,8 @@ setup(
     #package_data={'harpoon': ['harpoon/data/*.conf']},
     entry_points= {
         'console_scripts': [
-            'ipinfo=harpoontools.tools:ipinfo'
+            'ipinfo=harpoontools.tools:ipinfo',
+            'asninfo=harpoontools.tools:asninfo'
         ]
     }
 )

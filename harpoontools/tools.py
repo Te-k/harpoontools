@@ -1,6 +1,6 @@
 import argparse
 import json
-from harpoon.lib.utils import bracket, unbracket
+from harpoon.lib.utils import bracket, unbracket, is_ip
 from harpoon.commands.ip import CommandIp
 from harpoon.commands.asn import CommandAsn
 import geoip2.database
@@ -40,28 +40,31 @@ def ipinfo():
             print(json.dumps(r, sort_keys=True, indent=4))
     else:
         for ip in ips:
-            r = command.ipinfo(ip)
-            if args.format == "txt":
-                print('%s ; ASN%i ; %s ; %s ; %s' % (
-                        ip,
-                        r['asn'],
-                        r['asn_name'],
-                        r['city'],
-                        r['country']
+            if is_ip(ip):
+                r = command.ipinfo(ip)
+                if args.format == "txt":
+                    print('%s ; ASN%i ; %s ; %s ; %s' % (
+                            ip,
+                            r['asn'],
+                            r['asn_name'],
+                            r['city'],
+                            r['country']
+                        )
                     )
-                )
-            elif args.format == "csv":
-                print('%s;ASN%i;%s;%s;%s' % (
-                        ip,
-                        r['asn'],
-                        r['asn_name'],
-                        r['city'],
-                        r['country']
+                elif args.format == "csv":
+                    print('%s;ASN%i;%s;%s;%s' % (
+                            ip,
+                            r['asn'],
+                            r['asn_name'],
+                            r['city'],
+                            r['country']
+                        )
                     )
-                )
+                else:
+                    # JSON
+                    print(json.dumps({ip: r}, sort_keys=True, indent=4))
             else:
-                # JSON
-                print(json.dumps({ip: r}, sort_keys=True, indent=4))
+                print("%s ; Not an IP" % ip)
 
 def clean_asn(asn):
     """

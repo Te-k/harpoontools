@@ -91,5 +91,9 @@ def asninfo():
 
     command = CommandAsn()
     for asn in asns:
-        n = clean_asn(asn)
-        print("ASN%i ; %s" % (n, command.asnname(n)))
+        try:
+            n = clean_asn(asn)
+        except ValueError:
+            print("%s : invalid ASN number" % asn)
+        else:
+            print("ASN%i ; %s" % (n, command.asnname(n)))

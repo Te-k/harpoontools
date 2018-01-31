@@ -23,7 +23,9 @@ setup(
     entry_points= {
         'console_scripts': [
             'ipinfo=harpoontools.tools:ipinfo',
-            'asninfo=harpoontools.tools:asninfo'
+            'asninfo=harpoontools.tools:asninfo',
+            'dns=harpoontools.tools:dns',
+
         ]
     }
 )

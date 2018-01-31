@@ -3,6 +3,7 @@ import json
 from harpoon.lib.utils import bracket, unbracket, is_ip
 from harpoon.commands.ip import CommandIp
 from harpoon.commands.asn import CommandAsn
+from harpoon.commands.dnsc import CommandDns
 import geoip2.database
 
 
@@ -97,3 +98,14 @@ def asninfo():
             print("%s : invalid ASN number" % asn)
         else:
             print("ASN%i ; %s" % (n, command.asnname(n)))
+
+def dns():
+    """
+    Just a wrapper around the harpoon dns command
+    """
+    parser = argparse.ArgumentParser(description='Map DNS information for a domain or an IP address')
+    command = CommandDns()
+    command.add_arguments(parser)
+    plugins = { 'ip': CommandIp()}
+    args = parser.parse_args()
+    command.run({}, args, plugins)

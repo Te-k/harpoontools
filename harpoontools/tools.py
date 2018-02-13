@@ -25,42 +25,42 @@ def ipinfo():
     if len(ips) == 1:
         r = command.ipinfo(ips[0])
         if args.format == "txt":
-            print("Information on IP %s" % ips[0])
-            print("ASN: ASN%i - %s" % (r['asn'], r['asn_name'],))
-            print("Location: %s - %s" % (r['city'], r['country']))
+            if r['asn'] == "":
+                print("IP not found")
+            else:
+                print("Information on IP %s" % ips[0])
+                print("ASN: ASN%i - %s" % (r['asn'], r['asn_name'],))
+                print("Location: %s - %s" % (r['city'], r['country']))
         elif args.format == "csv":
-            print('%s;ASN%i;%s;%s;%s' % (
-                    ips[0],
-                    r['asn'],
-                    r['asn_name'],
-                    r['city'],
-                    r['country']
+            if r['asn'] == "":
+                print('%s;;;;' % ips[0])
+            else:
+                print('%s;ASN%i;%s;%s;%s' % (
+                        ips[0],
+                        r['asn'],
+                        r['asn_name'],
+                        r['city'],
+                        r['country']
+                    )
                 )
-            )
         else:
             print(json.dumps(r, sort_keys=True, indent=4))
     else:
         for ip in ips:
             if is_ip(ip):
                 r = command.ipinfo(ip)
-                if args.format == "txt":
-                    print('%s ; ASN%i ; %s ; %s ; %s' % (
-                            ip,
-                            r['asn'],
-                            r['asn_name'],
-                            r['city'],
-                            r['country']
+                if args.format in ["txt", "csv"]:
+                    if r['asn'] == "":
+                        print('%s ; ; ; ;' % ip)
+                    else:
+                        print('%s ; ASN%i ; %s ; %s ; %s' % (
+                                ip,
+                                r['asn'],
+                                r['asn_name'],
+                                r['city'],
+                                r['country']
+                            )
                         )
-                    )
-                elif args.format == "csv":
-                    print('%s;ASN%i;%s;%s;%s' % (
-                            ip,
-                            r['asn'],
-                            r['asn_name'],
-                            r['city'],
-                            r['country']
-                        )
-                    )
                 else:
                     # JSON
                     print(json.dumps({ip: r}, sort_keys=True, indent=4))

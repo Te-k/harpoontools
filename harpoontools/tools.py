@@ -31,16 +31,19 @@ def ipinfo():
                 print("Information on IP %s" % ips[0])
                 print("ASN: ASN%i - %s" % (r['asn'], r['asn_name'],))
                 print("Location: %s - %s" % (r['city'], r['country']))
+                if r['specific'] != '':
+                    print("Specific: %s" % r['specific'])
         elif args.format == "csv":
             if r['asn'] == "":
-                print('%s;;;;' % ips[0])
+                print('%s;;;;;' % ips[0])
             else:
-                print('%s;ASN%i;%s;%s;%s' % (
+                print('%s;ASN%i;%s;%s;%s;%s' % (
                         ips[0],
                         r['asn'],
                         r['asn_name'],
                         r['city'],
-                        r['country']
+                        r['country'],
+                        r['specific']
                     )
                 )
         else:
@@ -51,14 +54,15 @@ def ipinfo():
                 r = command.ipinfo(ip)
                 if args.format in ["txt", "csv"]:
                     if r['asn'] == "":
-                        print('%s ; ; ; ;' % ip)
+                        print('%s ; ; ; ; ;' % ip)
                     else:
-                        print('%s ; ASN%i ; %s ; %s ; %s' % (
+                        print('%s ; ASN%i ; %s ; %s ; %s ; %s' % (
                                 ip,
                                 r['asn'],
                                 r['asn_name'],
                                 r['city'],
-                                r['country']
+                                r['country'],
+                                r['specific']
                             )
                         )
                 else:

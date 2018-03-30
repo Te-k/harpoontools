@@ -31,6 +31,8 @@ def ipinfo():
                 print("Information on IP %s" % ips[0])
                 print("ASN: ASN%i - %s" % (r['asn'], r['asn_name'],))
                 print("Location: %s - %s" % (r['city'], r['country']))
+                if r['hostname'] != '':
+                    print('Hostname: %s' % r['hostname'])
                 if r['specific'] != '':
                     print("Specific: %s" % r['specific'])
         elif args.format == "csv":

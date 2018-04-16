@@ -23,43 +23,46 @@ def ipinfo():
     command = CommandIp()
 
     if len(ips) == 1:
-        r = command.ipinfo(ips[0])
-        if args.format == "txt":
-            if r['asn'] == "":
-                print("IP not found")
-            else:
-                print("Information on IP %s" % ips[0])
-                print("ASN: ASN%i - %s" % (r['asn'], r['asn_name'],))
-                print("Location: %s - %s" % (r['city'], r['country']))
-                if r['hostname'] != '':
-                    print('Hostname: %s' % r['hostname'])
-                if r['specific'] != '':
-                    print("Specific: %s" % r['specific'])
-        elif args.format == "csv":
-            if r['asn'] == "":
-                print('%s;;;;;' % ips[0])
-            else:
-                print('%s;ASN%i;%s;%s;%s;%s' % (
-                        ips[0],
-                        r['asn'],
-                        r['asn_name'],
-                        r['city'],
-                        r['country'],
-                        r['specific']
+        if is_ip(unbracket(ips[0])):
+            r = command.ipinfo(unbracket(ips[0]))
+            if args.format == "txt":
+                if r['asn'] == "":
+                    print("IP not found")
+                else:
+                    print("Information on IP %s" % unbracket(ips[0]))
+                    print("ASN: AS%i - %s" % (r['asn'], r['asn_name'],))
+                    print("Location: %s - %s" % (r['city'], r['country']))
+                    if r['hostname'] != '':
+                        print('Hostname: %s' % r['hostname'])
+                    if r['specific'] != '':
+                        print("Specific: %s" % r['specific'])
+            elif args.format == "csv":
+                if r['asn'] == "":
+                    print('%s;;;;;' % unbracket(ips[0]))
+                else:
+                    print('%s;AS%i;%s;%s;%s;%s' % (
+                            unbracket(ips[0]),
+                            r['asn'],
+                            r['asn_name'],
+                            r['city'],
+                            r['country'],
+                            r['specific']
+                        )
                     )
-                )
+            else:
+                print(json.dumps(r, sort_keys=True, indent=4))
         else:
-            print(json.dumps(r, sort_keys=True, indent=4))
+            print("Invalid IP address")
     else:
         for ip in ips:
-            if is_ip(ip):
-                r = command.ipinfo(ip)
+            if is_ip(unbracket(ip)):
+                r = command.ipinfo(unbracket(ip))
                 if args.format in ["txt", "csv"]:
                     if r['asn'] == "":
-                        print('%s ; ; ; ; ;' % ip)
+                        print('%s ; ; ; ; ;' % unbracket(ip))
                     else:
-                        print('%s ; ASN%i ; %s ; %s ; %s ; %s' % (
-                                ip,
+                        print('%s ; AS%i ; %s ; %s ; %s ; %s' % (
+                                unbracket(ip),
                                 r['asn'],
                                 r['asn_name'],
                                 r['city'],
@@ -69,9 +72,9 @@ def ipinfo():
                         )
                 else:
                     # JSON
-                    print(json.dumps({ip: r}, sort_keys=True, indent=4))
+                    print(json.dumps({unbracket(ip): r}, sort_keys=True, indent=4))
             else:
-                print("%s ; Not an IP" % ip)
+                print("%s ; ; ; ; ; Invalid IP" % unbracket(ip))
 
 def clean_asn(asn):
     """

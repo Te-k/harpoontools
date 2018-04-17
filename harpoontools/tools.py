@@ -59,14 +59,15 @@ def ipinfo():
                 r = command.ipinfo(unbracket(ip))
                 if args.format in ["txt", "csv"]:
                     if r['asn'] == "":
-                        print('%s ; ; ; ; ;' % unbracket(ip))
+                        print('%s ; ; ; ; ; ;' % unbracket(ip))
                     else:
-                        print('%s ; AS%i ; %s ; %s ; %s ; %s' % (
+                        print('%s ; AS%i ; %s ; %s ; %s ; %s ; %s' % (
                                 unbracket(ip),
                                 r['asn'],
                                 r['asn_name'],
                                 r['city'],
                                 r['country'],
+                                r['hostname'],
                                 r['specific']
                             )
                         )
@@ -74,7 +75,7 @@ def ipinfo():
                     # JSON
                     print(json.dumps({unbracket(ip): r}, sort_keys=True, indent=4))
             else:
-                print("%s ; ; ; ; ; Invalid IP" % unbracket(ip))
+                print("%s ; ; ; ; ; ; Invalid IP" % unbracket(ip))
 
 def clean_asn(asn):
     """

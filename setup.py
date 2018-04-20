@@ -25,7 +25,7 @@ setup(
             'ipinfo=harpoontools.tools:ipinfo',
             'asninfo=harpoontools.tools:asninfo',
             'dns=harpoontools.tools:dns',
-
+            'asncount=harpoontools.tools:asncount',
         ]
     }
 )

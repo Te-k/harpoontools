@@ -1,10 +1,9 @@
 import argparse
 import json
-from harpoon.lib.utils import bracket, unbracket, is_ip
+from harpoon.lib.utils import unbracket, is_ip
 from harpoon.commands.ip import CommandIp
 from harpoon.commands.asn import CommandAsn
 from harpoon.commands.dnsc import CommandDns
-import geoip2.database
 
 
 def ipinfo():
@@ -77,6 +76,7 @@ def ipinfo():
             else:
                 print("%s ; ; ; ; ; ; Invalid IP" % unbracket(ip))
 
+
 def clean_asn(asn):
     """
     Take something either as 18345, ASn17839 or AS2893
@@ -109,6 +109,7 @@ def asninfo():
         else:
             print("ASN%i ; %s" % (n, command.asnname(n)))
 
+
 def dns():
     """
     Just a wrapper around the harpoon dns command
@@ -116,6 +117,39 @@ def dns():
     parser = argparse.ArgumentParser(description='Map DNS information for a domain or an IP address')
     command = CommandDns()
     command.add_arguments(parser)
-    plugins = { 'ip': CommandIp()}
+    plugins = {'ip': CommandIp()}
     args = parser.parse_args()
     command.run({}, args, plugins)
+
+
+def asncount():
+    """
+    Take a list of IP addresses as an IP and count them by ASN
+    """
+    parser = argparse.ArgumentParser(description='Count IP addresses by ASN')
+    parser.add_argument('IP', type=str, nargs='*', default=[], help="IP addresses")
+    args = parser.parse_args()
+
+    if len(args.IP):
+        ips = args.IP
+    else:
+        with open("/dev/stdin") as f:
+            ips = f.read().split()
+
+    ipc = CommandIp()
+    asnc = CommandAsn()
+
+    asns = {}
+    for ip in ips:
+        asninfo = ipc.ip_get_asn(unbracket(ip))
+        if asninfo['asn'] not in asns:
+            asns[asninfo['asn']] = 1
+        else:
+            asns[asninfo['asn']] += 1
+
+    for asnn, nb in sorted(asns.items(), key=lambda x: x[1], reverse=True):
+        if asnn == 0:
+            name = "Unknown"
+        else:
+            name = asnc.asnname(asnn)
+        print("%i\tASN%-6i\t%s" % (nb, asnn, name))

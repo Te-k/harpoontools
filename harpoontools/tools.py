@@ -140,12 +140,20 @@ def asncount():
     asnc = CommandAsn()
 
     asns = {}
+    error = False
     for ip in ips:
-        asninfo = ipc.ip_get_asn(unbracket(ip))
-        if asninfo['asn'] not in asns:
-            asns[asninfo['asn']] = 1
+        if is_ip(ip):
+            asninfo = ipc.ip_get_asn(unbracket(ip))
+            if asninfo['asn'] not in asns:
+                asns[asninfo['asn']] = 1
+            else:
+                asns[asninfo['asn']] += 1
         else:
-            asns[asninfo['asn']] += 1
+            print('%s is not a valid IP address' % ip)
+            error = True
+
+    if error:
+        print('')
 
     for asnn, nb in sorted(asns.items(), key=lambda x: x[1], reverse=True):
         if asnn == 0:

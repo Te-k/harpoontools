@@ -167,7 +167,7 @@ def asncount():
     asns = {}
     error = False
     for ip in ips:
-        if is_ip(ip):
+        if is_ip(unbracket(ip)):
             asninfo = ipc.ip_get_asn(unbracket(ip))
             if asninfo['asn'] not in asns:
                 asns[asninfo['asn']] = 1
@@ -186,3 +186,39 @@ def asncount():
         else:
             name = asnc.asnname(asnn)
         print("%i\tASN%-6i\t%s" % (nb, asnn, name))
+
+
+def countrycount():
+    """
+    Count country from which IPs are
+    """
+    parser = argparse.ArgumentParser(description='Count IP addresses by Country')
+    parser.add_argument('IP', type=str, nargs='*', default=[], help="IP addresses")
+    args = parser.parse_args()
+
+    if len(args.IP):
+        ips = args.IP
+    else:
+        with open("/dev/stdin") as f:
+            ips = f.read().split()
+
+    ipc = CommandIp()
+
+    countries = {}
+    error = False
+    for ip in ips:
+        if is_ip(unbracket(ip)):
+            info = ipc.ipinfo(unbracket(ip), dns=False)
+            if info['country'] not in countries:
+                countries[info['country']] = 1
+            else:
+                countries[info['country']] += 1
+        else:
+            print('%s is not a valid IP address' % ip)
+            error = True
+
+    if error:
+        print('')
+
+    for cnn, nb in sorted(countries.items(), key=lambda x: x[1], reverse=True):
+        print("%i\t%s" % (nb, cnn))

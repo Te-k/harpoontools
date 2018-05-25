@@ -8,13 +8,14 @@ CLI tools using [Harpoon](https://github.com/Te-k/harpoon) features
 * **asninfo** : provides information on an ASN number
 * **dns** : provides DNS information on a domain or IP
 * **asncount** : count IP addresses by ASN numbers
+* **countrycount** : count IP addresses by countries
 
 ## Install
 
 Install [Harpoon](https://github.com/Te-k/harpoon) and then harpoontools :
 
 ```
-pip install git+ssh://git@github.com/Te-k/harpoon#egg=0.1.1  --process-dependency-links
+pip install git+ssh://git@github.com/Te-k/harpoon  --process-dependency-links
 pip install git+ssh://git@github.com/Te-k/harpoontools
 ```
 

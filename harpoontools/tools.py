@@ -30,7 +30,7 @@ def ipinfo():
                     print("IP not found")
                 else:
                     print("Information on IP %s" % unbracket(ips[0]))
-                    print("ASN: AS%i - %s" % (r['asn'], r['asn_name'],))
+                    print("ASN: AS%i - %s - %s" % (r['asn'], r['asn_name'], r['asn_type']))
                     print("Location: %s - %s" % (r['city'], r['country']))
                     if not args.no_dns:
                         if r['hostname'] != '':
@@ -42,10 +42,11 @@ def ipinfo():
                     print('%s;;;;;' % unbracket(ips[0]))
                 else:
                     if args.no_dns:
-                        print('%s;AS%i;%s;%s;%s;%s' % (
+                        print('%s;AS%i;%s;%s;%s;%s;%s' % (
                                 unbracket(ips[0]),
                                 r['asn'],
                                 r['asn_name'],
+                                r['asn_type'],
                                 r['city'],
                                 r['country'],
                                 r['specific']
@@ -56,6 +57,7 @@ def ipinfo():
                                 unbracket(ips[0]),
                                 r['asn'],
                                 r['asn_name'],
+                                r['asn_type'],
                                 r['city'],
                                 r['country'],
                                 r['hostname'],
@@ -75,20 +77,22 @@ def ipinfo():
                         print('%s ; ; ; ; ; ;' % unbracket(ip))
                     else:
                         if args.no_dns:
-                            print('%s ; AS%i ; %s ; %s ; %s ; %s ' % (
+                            print('%s ; AS%i ; %s ; %s ; %s ; %s ; %s ' % (
                                     unbracket(ip),
                                     r['asn'],
                                     r['asn_name'],
+                                    r['asn_type'],
                                     r['city'],
                                     r['country'],
                                     r['specific']
                                 )
                             )
                         else:
-                            print('%s ; AS%i ; %s ; %s ; %s ; %s ; %s' % (
+                            print('%s ; AS%i ; %s ; %s ; %s ; %s ; %s ; %s' % (
                                     unbracket(ip),
                                     r['asn'],
                                     r['asn_name'],
+                                    r['asn_type'],
                                     r['city'],
                                     r['country'],
                                     r['hostname'],

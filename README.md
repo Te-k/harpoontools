@@ -15,8 +15,10 @@ CLI tools using [Harpoon](https://github.com/Te-k/harpoon) features
 Install [Harpoon](https://github.com/Te-k/harpoon) and then harpoontools :
 
 ```
-pip install git+ssh://git@github.com/Te-k/harpoon  --process-dependency-links
-pip install git+ssh://git@github.com/Te-k/harpoontools
+pip install git+https://github.com/Te-k/pygreynoise.git
+pip install git+https://github.com/Te-k/pysafe.git
+pip install git+https://git@github.com/Te-k/harpoon
+pip install git+https://git@github.com/Te-k/harpoontools
 ```
 
 Configure Harpoon and download static files:

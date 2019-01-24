@@ -1,4 +1,6 @@
 import argparse
+import re
+import subprocess
 import json
 from harpoon.lib.utils import unbracket, is_ip
 from harpoon.commands.ip import CommandIp
@@ -226,3 +228,45 @@ def countrycount():
 
     for cnn, nb in sorted(countries.items(), key=lambda x: x[1], reverse=True):
         print("%i\t%s" % (nb, cnn))
+
+
+def traceroute():
+    """
+    Run traceroute with more information on IP addresses
+    """
+    parser = argparse.ArgumentParser(description='Run traceroute with more details on IPs')
+    parser.add_argument('IP', type=str, help="IP addresses")
+    args = parser.parse_args()
+    rex = re.compile('\s*(?P<id>\d+)\s+(?P<name>\S+)\s+\((?P<ip>[\d\.]+)\)(\s+[\d\.]+\s+ms(\s+\S+\s\([\d\.]+\))?)+\s*')
+    command = CommandIp()
+
+    try:
+        res = subprocess.run(
+            ['traceroute', args.IP],
+            capture_output=True,
+            check=True
+        )
+        for l in res.stdout.decode('utf-8').split('\n'):
+            if l.startswith('traceroute'):
+                print(l)
+            else:
+                if len(l.strip()) > 0:
+                    res = rex.match(l)
+                    if res:
+                        r = command.ipinfo(res.group('ip'), dns=False)
+                        print(' %s %s\t%s\tAS%i\t%s\t%s\t%s' % (
+                            res.group('id'),
+                            res.group('ip'),
+                            res.group('name'),
+                            r['asn'],
+                            r['asn_name'],
+                            r['country'],
+                            r['city']
+                            )
+                        )
+                    else:
+                        print(l)
+    except subprocess.CalledProcessError:
+        print('Something went wrong, do you have traceroute installed?')
+    except FileNotFoundError:
+        print('You have to install traceroute first')

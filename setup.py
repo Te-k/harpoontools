@@ -27,6 +27,7 @@ setup(
             'dns=harpoontools.tools:dns',
             'asncount=harpoontools.tools:asncount',
             'countrycount=harpoontools.tools:countrycount',
+            'htraceroute=harpoontools.tools:traceroute'
         ]
     }
 )

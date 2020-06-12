@@ -15,6 +15,7 @@ setup(
     keywords='osint',
     include_package_data=True,
     install_requires=[
+        'requests',
         'harpoon==0.1.4'
     ],
     python_requires='>=3.5',
@@ -27,7 +28,8 @@ setup(
             'dns=harpoontools.tools:dns',
             'asncount=harpoontools.tools:asncount',
             'countrycount=harpoontools.tools:countrycount',
-            'htraceroute=harpoontools.tools:traceroute'
+            'htraceroute=harpoontools.tools:traceroute',
+            'myip=harpoontools.tools:myip'
         ]
     },
     classifiers=[

@@ -2,6 +2,7 @@ import argparse
 import re
 import subprocess
 import json
+import requests
 from harpoon.lib.utils import unbracket, is_ip
 from harpoon.commands.ip import CommandIp
 from harpoon.commands.asn import CommandAsn
@@ -270,3 +271,8 @@ def traceroute():
         print('Something went wrong, do you have traceroute installed?')
     except FileNotFoundError:
         print('You have to install traceroute first')
+
+
+def myip():
+    r = requests.get("https://ipinfo.io/json")
+    print(json.dumps(r.json(), sort_keys=True, indent=4))

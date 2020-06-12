@@ -10,6 +10,7 @@ CLI tools using [Harpoon](https://github.com/Te-k/harpoon) features
 * **asncount** : count IP addresses by ASN numbers
 * **countrycount** : count IP addresses by countries
 * **htraceroute**: traceroute adding AS and geolocation of IPs (you need to have traceroute installed)
+* **myip**: get your public IP and location from ipinfo.io
 
 ## Install
 

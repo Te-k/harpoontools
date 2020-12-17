@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='harpoontools',
-    version='0.1.5',
+    version='0.1.6',
     description='CLI tools going with Harpoon',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -16,7 +16,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'requests',
-        'harpoon==0.1.5'
+        'harpoon==0.1.6'
     ],
     python_requires='>=3.5',
     license='GPLv3',

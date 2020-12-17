@@ -1,2 +1,2 @@
 requests
-harpoon==0.1.4
+harpoon==0.1.6

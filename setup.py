@@ -26,6 +26,7 @@ setup(
             'ipinfo=harpoontools.tools:ipinfo',
             'asninfo=harpoontools.tools:asninfo',
             'dns=harpoontools.tools:dns',
+            'dnsresolve=harpoontools.tools:dnsresolve',
             'asncount=harpoontools.tools:asncount',
             'countrycount=harpoontools.tools:countrycount',
             'htraceroute=harpoontools.tools:traceroute',

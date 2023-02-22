@@ -1,12 +1,14 @@
 import argparse
+import json
 import re
 import subprocess
-import json
+
 import requests
-from harpoon.lib.utils import unbracket, is_ip
-from harpoon.commands.ip import CommandIp
+from dns import exception, resolver
 from harpoon.commands.asn import CommandAsn
 from harpoon.commands.dnsc import CommandDns
+from harpoon.commands.ip import CommandIp
+from harpoon.lib.utils import is_ip, unbracket
 
 
 def ipinfo():
@@ -152,6 +154,44 @@ def dns():
     plugins = {'ip': CommandIp({})}
     args = parser.parse_args()
     command.run(args, plugins)
+
+
+def dnsresolve():
+    """
+    Resolve IP addresses for a list of domains
+    """
+    # TODO: implement different DNS types
+    parser = argparse.ArgumentParser(description='Provides IP information on a long list of domains')
+    parser.add_argument('DOMAINS', type=str, nargs='*', default=[], help="Domains")
+    args = parser.parse_args()
+
+    if len(args.DOMAINS):
+        domains = args.DOMAINS
+    else:
+        with open("/dev/stdin") as f:
+            domains = f.read().split()
+
+    ipc = CommandIp({})
+
+    for d in domains:
+        if d.strip() == "":
+            continue
+
+        try:
+            answers = resolver.resolve(d, 'A')
+        except (resolver.NoAnswer, resolver.NXDOMAIN, resolver.NoNameservers, exception.Timeout):
+            print("{} ; None ; ; ; ;".format(d))
+            continue
+        for rdata in answers:
+            info = ipc.ipinfo(rdata.address)
+            print("{} ; {} ; ASN{} ; {} ; {} ; {}".format(
+                d,
+                rdata.address,
+                info['asn'],
+                info['asn_name'],
+                info['city'],
+                info['country']
+            ))
 
 
 def asncount():

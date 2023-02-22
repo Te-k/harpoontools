@@ -13,7 +13,7 @@ def ipinfo():
     parser = argparse.ArgumentParser(description='Give information on an IP')
     parser.add_argument('IP', type=str, nargs='*', default=[], help="IP addresses")
     parser.add_argument('--format', '-f', help='Output format',
-            choices=["json", "csv", "txt"], default="txt")
+                        choices=["json", "csv", "txt"], default="txt")
     parser.add_argument('--no-dns', '-n', help='No reverse DNS query', action='store_true')
     args = parser.parse_args()
 
@@ -23,7 +23,7 @@ def ipinfo():
         with open("/dev/stdin") as f:
             ips = f.read().split()
 
-    command = CommandIp()
+    command = CommandIp({})
 
     if len(ips) == 1:
         if is_ip(unbracket(ips[0])):
@@ -56,7 +56,7 @@ def ipinfo():
                             )
                         )
                     else:
-                        print('%s;AS%i;%s;%s;%s;%s;%s' % (
+                        print('%s;AS%i;%s;%s;%s;%s;%s;%s' % (
                                 unbracket(ips[0]),
                                 r['asn'],
                                 r['asn_name'],
@@ -132,7 +132,7 @@ def asninfo():
         with open("/dev/stdin") as f:
             asns = f.read().split()
 
-    command = CommandAsn()
+    command = CommandAsn(None)
     for asn in asns:
         try:
             n = clean_asn(asn)
@@ -147,11 +147,11 @@ def dns():
     Just a wrapper around the harpoon dns command
     """
     parser = argparse.ArgumentParser(description='Map DNS information for a domain or an IP address')
-    command = CommandDns()
+    command = CommandDns({})
     command.add_arguments(parser)
-    plugins = {'ip': CommandIp()}
+    plugins = {'ip': CommandIp({})}
     args = parser.parse_args()
-    command.run({}, args, plugins)
+    command.run(args, plugins)
 
 
 def asncount():
@@ -238,7 +238,7 @@ def traceroute():
     parser = argparse.ArgumentParser(description='Run traceroute with more details on IPs')
     parser.add_argument('IP', type=str, help="IP addresses")
     args = parser.parse_args()
-    rex = re.compile('\s*(?P<id>\d+)\s+(?P<name>\S+)\s+\((?P<ip>[\d\.]+)\)(\s+[\d\.]+\s+ms(\s+\S+\s\([\d\.]+\))?)+\s*')
+    rex = re.compile(r'\s*(?P<id>\d+)\s+(?P<name>\S+)\s+\((?P<ip>[\d\.]+)\)(\s+[\d\.]+\s+ms(\s+\S+\s\([\d\.]+\))?)+\s*')
     command = CommandIp()
 
     try:
@@ -247,12 +247,12 @@ def traceroute():
             capture_output=True,
             check=True
         )
-        for l in res.stdout.decode('utf-8').split('\n'):
-            if l.startswith('traceroute'):
-                print(l)
+        for line in res.stdout.decode('utf-8').split('\n'):
+            if line.startswith('traceroute'):
+                print(line)
             else:
-                if len(l.strip()) > 0:
-                    res = rex.match(l)
+                if len(line.strip()) > 0:
+                    res = rex.match(line)
                     if res:
                         r = command.ipinfo(res.group('ip'), dns=False)
                         print(' %s %s\t%s\tAS%i\t%s\t%s\t%s' % (
@@ -266,7 +266,7 @@ def traceroute():
                             )
                         )
                     else:
-                        print(l)
+                        print(line)
     except subprocess.CalledProcessError:
         print('Something went wrong, do you have traceroute installed?')
     except FileNotFoundError:

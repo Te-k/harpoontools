@@ -16,12 +16,12 @@ setup(
     include_package_data=True,
     install_requires=[
         'requests',
-        'harpoon==0.1.6'
+        'harpoon==0.1.7'
     ],
     python_requires='>=3.5',
     license='GPLv3',
     packages=['harpoontools'],
-    entry_points= {
+    entry_points={
         'console_scripts': [
             'ipinfo=harpoontools.tools:ipinfo',
             'asninfo=harpoontools.tools:asninfo',
